@@ -1,77 +1,73 @@
-# Smart Leads Dashboard
+# React + TypeScript + Vite
 
-## Deployment Instructions
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-### Render Setup
+Currently, two official plugins are available:
 
-1. **Create a New Web Service**:
-   - Go to [Render](https://render.com/).
-   - Create a new **Web Service**.
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-2. **Connect GitHub Repository**:
-   - Link your GitHub repository to Render.
+## React Compiler
 
-3. **Environment**:
-   - Set the following environment variables:
-     - `NODE_ENV=production`
-     - `PORT=5000`
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-4. **Build Command**:
+## Expanding the ESLint configuration
 
-   ```bash
-   npm run build
-   ```
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-5. **Start Command**:
+```js
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
 
-   ```bash
-   npm start
-   ```
+      // Remove tseslint.configs.recommended and replace with this
+      tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      tseslint.configs.stylisticTypeChecked,
 
-6. **Free Plan Compatibility**:
-   - Ensure the service uses the free plan.
-
-### GitHub Push Commands
-
-```bash
-# Initialize Git repository (if not already done)
-git init
-
-git add .
-git commit -m "Prepare for Render deployment"
-
-git branch -M main
-git remote add origin <your-repo-url>
-git push -u origin main
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 ```
 
-### Final Folder Structure
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-```
-smart-dashboard/
-├── docker-compose.yml
-├── package.json
-├── smart-leads-backend/
-│   ├── Dockerfile
-│   ├── dist/
-│   │   ├── public/
-│   │   └── index.js
-│   ├── src/
-│   │   ├── database/
-│   │   │   └── sqlite.ts
-│   │   ├── index.ts
-│   │   └── ...
-│   └── ...
-├── smart-leads-dashboard/
-│   ├── src/
-│   │   └── ...
-│   └── vite.config.ts
-└── README.md
-```
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
 
-### Required Package Installs
-
-```bash
-# Install dependencies
-npm install
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 ```
