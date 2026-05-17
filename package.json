@@ -1,0 +1,17 @@
+{
+  "name": "smart-leads-dashboard-monorepo",
+  "version": "1.0.0",
+  "description": "Smart Leads CRM Dashboard with Self-Destructing Local JSON Database",
+  "private": true,
+  "scripts": {
+    "server": "npm run dev --prefix smart-leads-backend",
+    "client": "npm run dev --prefix smart-leads-dashboard",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "install:all": "npm install --prefix smart-leads-backend && npm install --prefix smart-leads-dashboard && npm install",
+    "build": "cd smart-leads-dashboard && npm install && npm run build && cd ../smart-leads-backend && npm install && npm run build",
+    "start": "node smart-leads-backend/dist/index.js"
+  },
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
