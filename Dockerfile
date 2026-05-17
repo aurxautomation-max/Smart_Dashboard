@@ -1,5 +1,5 @@
 # Build Stage
-FROM node:20-alpine as build
+FROM node:20-alpine AS build
 
 WORKDIR /app
 
@@ -10,22 +10,26 @@ RUN npm install
 # Copy source code
 COPY . .
 
-# Pass build arguments to environment for Vite
-ARG VITE_API_URL
-ENV VITE_API_URL=$VITE_API_URL
-
-# Build the application
+# Build TypeScript to JavaScript
 RUN npm run build
 
 # Production Stage
-FROM nginx:alpine
+FROM node:20-alpine
 
-# Copy custom Nginx configuration to handle React Router fallback
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+WORKDIR /app
 
-# Copy built assets from the build stage
-COPY --from=build /app/dist /usr/share/nginx/html
+# Copy package files and install only production dependencies
+COPY package*.json ./
+RUN npm install --only=production
 
-EXPOSE 80
+# Copy compiled JavaScript from build stage
+COPY --from=build /app/dist ./dist
 
-CMD ["nginx", "-g", "daemon off;"]
+# Set environment defaults
+ENV NODE_ENV=production
+ENV PORT=5000
+
+EXPOSE 5000
+
+# Start the application
+CMD ["npm", "start"]

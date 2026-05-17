@@ -1,7 +1,5 @@
 node_modules
 dist
-dist-ssr
-.cache
 .env
 .env.local
 .env.development.local
